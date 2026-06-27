@@ -2,20 +2,18 @@
 
 let now = new Date();
 now.getFullYear()
-now.getMonth()     // Jan 0, Nov 11 (0-11)
+now.getMonth()
 
-currentMonth=now.getMonth();
-currentYear=now.getFullYear();
-
+currentMonth = now.getMonth();
+currentYear = now.getFullYear();
 
 //Search
 function search() {
-    getUserName()
-    getLocation()
+    getUserName();
+    getLocation();
 }
 
-
-//Get username
+//Chess API lookup
 function getUserName() {
     var chessUsername = document.getElementById('chessUsername').value;
 
@@ -25,35 +23,39 @@ function getUserName() {
             console.log(data)
         })
 
-        fetch(`https://api.chess.com/pub/player/${chessUsername}/games/${currentYear}/05`)
+    fetch(`https://api.chess.com/pub/player/${chessUsername}/games/${currentYear}/05`)
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            console.log(data.games[0])
+            let count = 1;
+            let table = '<table>';
+            data.games.forEach(game => {
+                if (game.black.username == chessUsername) {
+                    table += `<tr><td>${count++}. ${game.black.result}</td></tr>`;
+                } else {
+                    table += `<tr><td>${count++}. ${game.white.result}</td></tr>`;
+                }
+            });
+            table += '</table>';
+            document.write(table);
         })
 }
-
-
 
 //Weather
 function getLocation() {
     var location = document.getElementById('weatherLocation').value;
-  
-  
-  //Turning city into coordinates
+
     fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=1`)
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            console.log(data.results[0].latitude)
-            console.log(data.results[0].longitude)
-            //Returning weather
             let lat = data.results[0].latitude
             let lon = data.results[0].longitude
-            fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=2026-06-08&end_date=2026-06-22&hourly=temperature_2m`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-            })
-                  })
-  }
+            fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=2026-06-08&end_date=2026-06-22&hourly=temperature_2m,weathercode`)
+                .then(response => response.json())
+                .then(data => {
+                    document.write(JSON.stringify(data))                    
+                    console.log(data)
+                })
+        })
+}
