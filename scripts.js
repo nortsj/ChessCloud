@@ -1,3 +1,16 @@
+//Button
+document.getElementById("weatherLocation").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        search();
+    }
+});
+
+document.getElementById("chessUsername").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        search();
+    }
+});
+
 //Chess
 
 let now = new Date();
@@ -37,8 +50,8 @@ function getUserName() {
                 }
             });
             table += '</table>';
-            document.write(table);
-        })
+            document.getElementById('output').innerHTML += table;
+                })
 }
 
 //Weather
@@ -54,8 +67,18 @@ function getLocation() {
             fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=2026-06-08&end_date=2026-06-22&hourly=temperature_2m,weathercode`)
                 .then(response => response.json())
                 .then(data => {
-                    document.write(JSON.stringify(data))                    
-                    console.log(data)
+                    let split = data.hourly.time[0].split("T");
+                    let date = split[0];
+                    let time = split[1];
+                    let temp = data.hourly.temperature_2m[0];
+                    let code = data.hourly.weathercode[0];
+                    if (code === 0) {
+                        code = "Clear sky";
+                    } else {
+                        code = "Code not yet completed";
+                    }
+                    document.getElementById('output').innerHTML = date + "<br>" + time + "<br>" + temp + "°C" + "<br>" + code;
+                    console.log(data);
                 })
-        })
-}
+            })
+        }
