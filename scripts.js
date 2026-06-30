@@ -42,15 +42,23 @@ function getUserName() {
             console.log(data)
             let count = 1;
             let table = '<table>';
-            data.games.forEach(game => {
-                if (game.black.username == chessUsername) {
+            const game = data.games[0];
+            if (game) {
+                if (game.black.username === chessUsername) {
                     table += `<tr><td>${count++}. ${game.black.result}</td></tr>`;
                 } else {
                     table += `<tr><td>${count++}. ${game.white.result}</td></tr>`;
                 }
-            });
+            }
+            //data.game[0].forEach(game => {
+              //  if (game.black.username == chessUsername) {
+                //    table += `<tr><td>${count++}. ${game.black.result}</td></tr>`;
+                //} else {
+                 //   table += `<tr><td>${count++}. ${game.white.result}</td></tr>`;
+               // }
+            //});
             table += '</table>';
-            document.getElementById('output').innerHTML += table;
+            document.getElementById('outputchess').innerHTML += table;
                 })
 }
 
@@ -77,7 +85,7 @@ function getLocation() {
                     } else {
                         code = "Code not yet completed";
                     }
-                    document.getElementById('output').innerHTML = date + "<br>" + time + "<br>" + temp + "°C" + "<br>" + code;
+                    document.getElementById('outputweather').innerHTML = date + "<br>" + time + "<br>" + temp + "°C" + "<br>" + code;
                     console.log(data);
                 })
             })
